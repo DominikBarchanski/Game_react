@@ -1,0 +1,15 @@
+.battleContainer {
+    display: flex;
+    justify-content: space-between;
+    border: 1px solid black; /* Add a border around the container */
+    padding: 10px; /* Add some padding to the container */
+}
+
+.rectangle {
+    width: 200px;
+    height: 300px;
+    border: 1px solid black;
+    padding: 10px;
+    box-sizing: border-box;
+    flex: 1; /* Make the rectangles take up equal space */
+}
