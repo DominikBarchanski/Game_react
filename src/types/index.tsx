@@ -1,6 +1,7 @@
 export interface Enemy {
     id: string;
     name: string;
+    strength: number;
     healthRange: [number, number]; // Min and max health
     strengthRange: [number, number]; // Min and max strength
     experience: number;

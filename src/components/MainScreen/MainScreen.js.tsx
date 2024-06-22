@@ -4,13 +4,13 @@ import MapSelection from '../MapSelection/MapSelection.js';
 import { useNavigate } from 'react-router-dom';
 
 import './MainScreen.module.css';
-import {locations} from "../../constants/gameData";
-import {useGameContext} from "../../context/GameContext.js";
+import { locations } from "../../constants/gameData";
+import { useGameContext } from "../../context/GameContext.js";
 
 const MainScreen: React.FC = () => {
     const [showMapSelection, setShowMapSelection] = useState(false);
     const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
-    const { startBattle } = useGameContext(); // Get this from your GameContext
+    const { changeMap, startBattle } = useGameContext();
     const navigate = useNavigate();
 
     const handleMapSelectionClick = () => {
@@ -20,24 +20,12 @@ const MainScreen: React.FC = () => {
     const handleLocationSelect = (locationName: string) => {
         setSelectedLocation(locationName);
         setShowMapSelection(false);
+        changeMap(locationName);
     };
+
     const findEnemy = () => {
-        // Make sure the location exists before attempting to access its properties
-        const location = locations.find(loc => loc.name === selectedLocation);
-        console.log(location);
-        if (location) {
-            const randomEnemyIndex = Math.floor(Math.random() * location.enemies.length);
-            const enemy = location.enemies[randomEnemyIndex];
-
-            startBattle(enemy);
-            // The rest of your battle setup logic
-
-            // Navigate to the BattleJs screen
-            navigate('/Battle');
-        } else {
-            console.error('Location not found');
-            // Handle the error case, such as showing an error message to the user
-        }
+        startBattle();
+        navigate('/Battle');
     };
 
     return (

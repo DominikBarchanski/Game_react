@@ -1,20 +1,36 @@
-import React,{useState , useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { useGameContext } from '../../context/GameContext.js';
+import { useNavigate } from 'react-router-dom';
+import styles from './Battle.module.css';
 
-import {useNavigate} from "react-router-dom";
-import styles from './Battle.module.css'; // Import the CSS file
 const Battle: React.FC = () => {
     const { gameState, enemy, endBattle, turn, setTurn, isFighting } = useGameContext();
     const [experienceGained, setExperienceGained] = useState(0);
     const navigate = useNavigate();
+
     useEffect(() => {
         if (!isFighting && enemy === null) {
             setTimeout(() => {
                 navigate('/');
-            }, 5000);
+            }, 1000);
         }
     }, [isFighting, enemy, navigate]);
-    if (!enemy) return <p>Loading battle... <button onClick={()=>navigate('/')}></button> </p>; // handle loading state
+
+    // Ensure useEffect is above any early return
+    useEffect(() => {
+        if (turn === 'enemy') {
+            handleEnemyAction();
+        }
+    }, [turn]);
+
+    if (!enemy) {
+        return (
+            <p>Loading battle...
+                <button onClick={() => navigate('/')}>Return to Main</button>
+            </p>
+        );
+    }
+
     if (!isFighting && enemy === null) {
         return (
             <div>
@@ -24,42 +40,47 @@ const Battle: React.FC = () => {
             </div>
         );
     }
-    const battleLog = [];
-    const battleLoop = () => {
-        if (turn === 'player') {
-            // Player's turn
-            handlePlayerAction();
-        } else {
-            // Enemy's turn
-            handleEnemyAction();
-        }
-    }
+
     const handleEnemyAction = () => {
-        const enemyDamage = Math.floor(Math.random() * 10) + 1;
+        const actions = ['attack'];
+        const action = actions[Math.floor(Math.random() * actions.length)];
 
-    }
+        switch (action) {
+            case 'attack':
+                const enemyDamage = Math.floor(Math.random() * 10) + 1;
+                console.log(`Enemy attacks for ${enemyDamage} damage!`);
+                gameState.character.health -= enemyDamage;
+                if (gameState.character.health <= 0) {
+                    endBattle();
+                } else {
+                    setTurn('player');
+                }
+                break;
+            case 'wait':
+                console.log('Enemy is waiting...');
+                setTurn('player');
+                break;
+            case 'flee':
+                console.log('Enemy flees the battle!');
+                endBattle();
+                break;
+            default:
+                break;
+        }
+    };
+
     const handlePlayerAction = () => {
-        // Perform player action, e.g. attack the enemy
         console.log(`Player attacks ${enemy.name}`);
+        enemy.health -= Math.floor(Math.random() * gameState.character.strength ) + 1;
+        console.log(`${enemy.name} health: ${enemy.health}`);
 
-        // Example of updating enemy state, need to adjust according to actual state management
-        // setEnemy({ ...enemy, health: enemy.health - playerAttackDamage });
-        enemy.health -= (gameState.character.strength)/10;
-
-        console.log(`${enemy.name} health: ${enemy.health}`)
-        // Check if enemy is defeated
         if (enemy.health <= 0) {
             setExperienceGained(enemy.experience);
             endBattle();
-            // Update experience, etc.
         } else {
-            // If enemy not defeated, set turn to enemy
             setTurn('enemy');
         }
-        // TODO: Handle the enemy's action on their turn
     };
-
-    // ... Rest of the component
 
     return (
         <div className={styles.battleContainer}>
@@ -74,7 +95,7 @@ const Battle: React.FC = () => {
                 <h2>Enemy: {enemy.name}</h2>
                 <p>Health: {enemy.health}</p>
                 <p>Strength: {enemy.strengthRange[1]}</p>
-                {turn === 'enemy' && (<p>Waiting for enemy move...</p> )}
+                {turn === 'enemy' && <p>Waiting for enemy move...</p>}
             </div>
             <button onClick={() => navigate('/')}>Return to main screen</button>
         </div>

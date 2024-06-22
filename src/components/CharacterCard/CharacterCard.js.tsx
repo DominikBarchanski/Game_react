@@ -7,10 +7,18 @@ const CharacterCard: React.FC = () => {
     const { gameState, updateCharacter } = useGameContext();
 
     const evolveCharacter = () => {
-        updateCharacter({
-            strength: gameState.character.strength + 5,
-            health: gameState.character.health + 20
-        });
+
+        if (gameState.character.experience < gameState.character.lvlUpExp) {
+            return;
+        }else {
+            updateCharacter({
+                strength: gameState.character.strength + 5,
+                health: gameState.character.health + 20,
+                level: gameState.character.level + 1
+            });
+            gameState.character.experience -= gameState.character.lvlUpExp;
+            gameState.character.lvlUpExp = (gameState.character.level +10)**2;
+        }
     };
 
     return (
@@ -18,7 +26,8 @@ const CharacterCard: React.FC = () => {
             <h2>Character Stats</h2>
             <p>Health: {gameState.character.health}</p>
             <p>Strength: {gameState.character.strength}</p>
-            <p>Experience: {gameState.character.experience}</p>
+            <p>Level: {gameState.character.level}</p>
+            <p>Experience: {gameState.character.experience}/{gameState.character.lvlUpExp}</p>
             <button onClick={evolveCharacter}>Evolve Character</button>
         </div>
     );
