@@ -1,7 +1,20 @@
 .characterCard {
     border: 2px solid #ccc;
-    padding: 10px;
-    margin: 10px;
-    text-align: center;
-    background-color: red;
+    padding: 20px;
+    margin: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.character-image {
+    margin-right: 20px;
+}
+
+.stats {
+    flex-grow: 1;
+}
+
+button {
+    margin-top: 10px;
 }

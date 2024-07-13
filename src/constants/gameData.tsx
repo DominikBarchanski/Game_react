@@ -19,6 +19,7 @@ export const possibleEnemies: Enemy[] = [
         strengthRange: [5, 10],
         experience: 20,
         health: 0, // Initial health will be set when generating the enemy
+        img:'',
     },
     {
         id: 'orc',
@@ -28,6 +29,7 @@ export const possibleEnemies: Enemy[] = [
         strengthRange: [10, 20],
         experience: 40,
         health: 0, // Initial health will be set when generating the enemy
+        img:'',
     },
     // Add more possible enemies as needed
 ];

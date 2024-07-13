@@ -10,7 +10,7 @@ const MapSelection: React.FC<MapSelectionProps> = ({ onLocationSelect }) => {
         <div>
             <h2>Select a Location</h2>
             {locations.map(location => (
-                <button key={location.id} onClick={() => onLocationSelect(location.name)}>
+                <button className="btn btn-primary" key={location.id} onClick={() => onLocationSelect(location.name)}>
                     {location.name}
                 </button>
             ))}

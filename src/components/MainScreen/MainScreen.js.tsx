@@ -30,16 +30,16 @@ const MainScreen: React.FC = () => {
 
     return (
         <div className="mainScreen">
-            <h1>Game Title</h1>
+            <h1>Simple game</h1>
             <CharacterCard />
             {showMapSelection ? (
                 <MapSelection onLocationSelect={handleLocationSelect} />
             ) : (
                 <>
-                    <button onClick={handleMapSelectionClick}>Choose Map</button>
+                    <button className="btn btn-primary" onClick={handleMapSelectionClick}>Choose Map</button>
                     {selectedLocation && <p>Selected Location: {selectedLocation}</p>}
                     {/* The "Find Enemy" button should probably be disabled until a location is selected */}
-                    <button onClick={findEnemy} disabled={!selectedLocation}>Find Enemy</button>
+                    <button className="btn btn-primary" onClick={findEnemy} disabled={!selectedLocation}>Find Enemy</button>
                 </>
             )}
         </div>

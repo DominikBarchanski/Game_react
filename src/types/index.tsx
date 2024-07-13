@@ -6,6 +6,7 @@ export interface Enemy {
     strengthRange: [number, number]; // Min and max strength
     experience: number;
     health: number;
+    img:string;
 }
 
 export interface Location {

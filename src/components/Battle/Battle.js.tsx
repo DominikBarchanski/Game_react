@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useGameContext } from '../../context/GameContext.js';
 import { useNavigate } from 'react-router-dom';
 import styles from './Battle.module.css';
-
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { ProgressBar } from 'react-bootstrap';
 const Battle: React.FC = () => {
     const { gameState, enemy, endBattle, turn, setTurn, isFighting } = useGameContext();
     const [experienceGained, setExperienceGained] = useState(0);
@@ -84,21 +85,36 @@ const Battle: React.FC = () => {
 
     return (
         <div className={styles.battleContainer}>
-            <div className={styles.rectangle}>
-                <h2>Player</h2>
-                <p>Health: {gameState.character.health}</p>
-                <p>Strength: {gameState.character.strength}</p>
-                <p>Experience: {gameState.character.experience}</p>
-                {turn === 'player' && <button onClick={handlePlayerAction}>Attack</button>}
+            <div className={styles.characterRow}>
+                <div className={styles.characterContainer}>
+                    <img
+                        src="https://images.unsplash.com/photo-1593085512500-5d55148d6f0d?q=80&w=2334&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                        alt="Character"
+                        className={styles.characterImage}
+                        width={100}
+                        height={100}
+                    />
+                    <h2>Player</h2>
+                    <ProgressBar now={gameState.character.health} max={100} label={`${gameState.character.health}`} style={{width:'100px'}}/>
+                    <p>Health: {gameState.character.health}</p>
+                    <p>Strength: {gameState.character.strength}</p>
+                    <p>Experience: {gameState.character.experience}</p>
+                    {turn === 'player' && <button onClick={handlePlayerAction}>Attack</button>}
+                </div>
+                <div className={styles.characterContainer}>
+                    <h2>Enemy: {enemy.name}</h2>
+                    <img src={enemy.img} alt={enemy.name} width={100} height={100}/>
+                    <ProgressBar now={enemy.health} max={enemy.healthRange[1]} label={`${enemy.health}`} style={{width:'100px'}}/>
+                    <p>Health: {enemy.health}</p>
+                    <p>Strength: {enemy.strength}</p>
+                    {turn === 'enemy' && <p>Waiting for enemy move...</p>}
+                </div>
             </div>
-            <div className={styles.rectangle}>
-                <h2>Enemy: {enemy.name}</h2>
-                <p>Health: {enemy.health}</p>
-                <p>Strength: {enemy.strengthRange[1]}</p>
-                {turn === 'enemy' && <p>Waiting for enemy move...</p>}
+            <div className={styles.returnButtonContainer}>
+                <button className="btn btn-primary" onClick={() => navigate('/')}>Return to main screen</button>
             </div>
-            <button onClick={() => navigate('/')}>Return to main screen</button>
         </div>
+
     );
 };
 

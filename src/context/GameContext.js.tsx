@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { locations, possibleEnemies } from '../constants/gameData';
 import { Enemy } from '../types';
+import { fetchRandomImage } from '../util/fetchRandomImage'; // Import the utility function
 
 interface CharacterStats {
     health: number;
@@ -32,7 +33,7 @@ interface GameContextType {
 }
 
 const defaultState: GameState = {
-    character: { health: 100, strength: 10,level:1,lvlUpExp:(1 +10)*2, experience: 0 },
+    character: { health: 100, strength: 10, level: 1, lvlUpExp: (1 + 10) * 2, experience: 0 },
     currentMap: 'Forest',
     gameStatus: 'active',
     battleEnemies: [],
@@ -53,10 +54,11 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         }));
     };
 
-    const generateEnemy = (enemyTemplate: Enemy): Enemy => {
+    const generateEnemy = async (enemyTemplate: Enemy): Promise<Enemy> => {
         const health = Math.floor(Math.random() * (enemyTemplate.healthRange[1] - enemyTemplate.healthRange[0] + 1)) + enemyTemplate.healthRange[0];
         const strength = Math.floor(Math.random() * (enemyTemplate.strengthRange[1] - enemyTemplate.strengthRange[0] + 1)) + enemyTemplate.strengthRange[0];
-        return { ...enemyTemplate, health, strength };
+        const img = await fetchRandomImage();
+        return { ...enemyTemplate, health, strength, img };
     };
 
     const changeMap = (locationName: string) => {
@@ -70,10 +72,10 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         }));
     };
 
-    const startBattle = () => {
+    const startBattle = async () => {
         const location = locations.find(loc => loc.name === gameState.currentMap);
         if (location) {
-            const battleEnemies = location.enemies.map(enemyTemplate => generateEnemy(enemyTemplate));
+            const battleEnemies = await Promise.all(location.enemies.map(enemyTemplate => generateEnemy(enemyTemplate)));
             const randomEnemyIndex = Math.floor(Math.random() * battleEnemies.length);
             const selectedEnemy = battleEnemies[randomEnemyIndex];
             setIsFighting(true);
